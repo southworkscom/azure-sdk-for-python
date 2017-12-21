@@ -15,8 +15,9 @@ from msrest.serialization import Model
 class Error(Model):
     """Object representing error information.
 
-    :param code: Error code.
-    :type code: str
+    :param code: Error code. Possible values include: '400', '401', '403',
+     '404', '405', '429', '500', '503'
+    :type code: str or ~azure.botframework.connector.models.ErrorCode
     :param message: A description of the error.
     :type message: str
     """

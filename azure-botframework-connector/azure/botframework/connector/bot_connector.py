@@ -12,7 +12,6 @@
 from msrest.service_client import ServiceClient
 from msrest import Configuration, Serializer, Deserializer
 from .version import VERSION
-from msrest.exceptions import HttpOperationError
 from .operations.attachments_operations import AttachmentsOperations
 from .operations.conversations_operations import ConversationsOperations
 from . import models
@@ -80,7 +79,7 @@ class BotConnector(object):
         self._client = ServiceClient(self.config.credentials, self.config)
 
         client_models = {k: v for k, v in models.__dict__.items() if isinstance(v, type)}
-        self.api_version = 'v3'
+        self.api_version = 'v3.0'
         self._serialize = Serializer(client_models)
         self._deserialize = Deserializer(client_models)
 

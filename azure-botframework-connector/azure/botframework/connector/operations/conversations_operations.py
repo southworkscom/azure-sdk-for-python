@@ -10,7 +10,6 @@
 # --------------------------------------------------------------------------
 
 from msrest.pipeline import ClientRawResponse
-from msrest.exceptions import HttpOperationError
 
 from .. import models
 
@@ -66,10 +65,12 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: ConversationResourceResponse or ClientRawResponse if raw=true
+        :rtype:
+         ~azure.botframework.connector.models.ConversationResourceResponse or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations'
@@ -91,8 +92,8 @@ class ConversationsOperations(object):
         response = self._client.send(
             request, header_parameters, body_content, **operation_config)
 
-        if response.status_code not in [200, 201, 202, 400, 401, 403, 404, 405, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200, 201, 202]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
@@ -102,22 +103,6 @@ class ConversationsOperations(object):
             deserialized = self._deserialize('ConversationResourceResponse', response)
         if response.status_code == 202:
             deserialized = self._deserialize('ConversationResourceResponse', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 405:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
@@ -150,10 +135,11 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: ResourceResponse or ClientRawResponse if raw=true
+        :rtype: ~azure.botframework.connector.models.ResourceResponse or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations/{conversationId}/activities'
@@ -179,8 +165,8 @@ class ConversationsOperations(object):
         response = self._client.send(
             request, header_parameters, body_content, **operation_config)
 
-        if response.status_code not in [200, 201, 202, 400, 401, 403, 404, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200, 201, 202]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
@@ -190,20 +176,6 @@ class ConversationsOperations(object):
             deserialized = self._deserialize('ResourceResponse', response)
         if response.status_code == 202:
             deserialized = self._deserialize('ResourceResponse', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
@@ -234,10 +206,11 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: ResourceResponse or ClientRawResponse if raw=true
+        :rtype: ~azure.botframework.connector.models.ResourceResponse or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations/{conversationId}/activities/{activityId}'
@@ -264,8 +237,8 @@ class ConversationsOperations(object):
         response = self._client.send(
             request, header_parameters, body_content, **operation_config)
 
-        if response.status_code not in [200, 201, 202, 400, 401, 403, 404, 405, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200, 201, 202]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
@@ -275,22 +248,6 @@ class ConversationsOperations(object):
             deserialized = self._deserialize('ResourceResponse', response)
         if response.status_code == 202:
             deserialized = self._deserialize('ResourceResponse', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 405:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
@@ -324,10 +281,11 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: ResourceResponse or ClientRawResponse if raw=true
+        :rtype: ~azure.botframework.connector.models.ResourceResponse or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations/{conversationId}/activities/{activityId}'
@@ -354,8 +312,8 @@ class ConversationsOperations(object):
         response = self._client.send(
             request, header_parameters, body_content, **operation_config)
 
-        if response.status_code not in [200, 201, 202, 400, 401, 403, 404, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200, 201, 202]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
@@ -365,20 +323,6 @@ class ConversationsOperations(object):
             deserialized = self._deserialize('ResourceResponse', response)
         if response.status_code == 202:
             deserialized = self._deserialize('ResourceResponse', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
@@ -404,11 +348,10 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: ErrorResponse or ClientRawResponse if raw=true
-        :rtype: ~azure.botframework.connector.models.ErrorResponse or
-         ~msrest.pipeline.ClientRawResponse
+        :return: None or ClientRawResponse if raw=true
+        :rtype: None or ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations/{conversationId}/activities/{activityId}'
@@ -431,33 +374,12 @@ class ConversationsOperations(object):
         request = self._client.delete(url, query_parameters)
         response = self._client.send(request, header_parameters, **operation_config)
 
-        if response.status_code not in [200, 202, 400, 401, 403, 404, 405, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
-
-        deserialized = None
-
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 405:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
+        if response.status_code not in [200, 202]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         if raw:
-            client_raw_response = ClientRawResponse(deserialized, response)
+            client_raw_response = ClientRawResponse(None, response)
             return client_raw_response
-
-        return deserialized
 
     def get_conversation_members(
             self, conversation_id, custom_headers=None, raw=False, **operation_config):
@@ -474,10 +396,11 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: list or ClientRawResponse if raw=true
+        :rtype: list[~azure.botframework.connector.models.ChannelAccount] or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations/{conversationId}/members'
@@ -499,29 +422,13 @@ class ConversationsOperations(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, **operation_config)
 
-        if response.status_code not in [200, 400, 401, 403, 404, 405, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
         if response.status_code == 200:
             deserialized = self._deserialize('[ChannelAccount]', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 405:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
@@ -547,10 +454,11 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: list or ClientRawResponse if raw=true
+        :rtype: list[~azure.botframework.connector.models.ChannelAccount] or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations/{conversationId}/activities/{activityId}/members'
@@ -573,29 +481,13 @@ class ConversationsOperations(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, **operation_config)
 
-        if response.status_code not in [200, 400, 401, 403, 404, 405, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
         if response.status_code == 200:
             deserialized = self._deserialize('[ChannelAccount]', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 405:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
@@ -623,10 +515,11 @@ class ConversationsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: ResourceResponse or ClientRawResponse if raw=true
+        :rtype: ~azure.botframework.connector.models.ResourceResponse or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/conversations/{conversationId}/attachments'
@@ -652,8 +545,8 @@ class ConversationsOperations(object):
         response = self._client.send(
             request, header_parameters, body_content, **operation_config)
 
-        if response.status_code not in [200, 201, 202, 400, 401, 403, 404, 405, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200, 201, 202]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
@@ -663,22 +556,6 @@ class ConversationsOperations(object):
             deserialized = self._deserialize('ResourceResponse', response)
         if response.status_code == 202:
             deserialized = self._deserialize('ResourceResponse', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 405:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)

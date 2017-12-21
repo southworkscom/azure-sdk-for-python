@@ -12,7 +12,7 @@
 from .attachment_view import AttachmentView
 from .attachment_info import AttachmentInfo
 from .error import Error
-from .error_response import ErrorResponse
+from .error_response import ErrorResponse, ErrorResponseException
 from .channel_account import ChannelAccount
 from .conversation_account import ConversationAccount
 from .message_reaction import MessageReaction
@@ -42,6 +42,7 @@ from .geo_coordinates import GeoCoordinates
 from .media_event_value import MediaEventValue
 from .place import Place
 from .bot_connector_enums import (
+    ErrorCode,
     ActivityType,
     TextFormat,
     InputHint,
@@ -51,7 +52,7 @@ __all__ = [
     'AttachmentView',
     'AttachmentInfo',
     'Error',
-    'ErrorResponse',
+    'ErrorResponse', 'ErrorResponseException',
     'ChannelAccount',
     'ConversationAccount',
     'MessageReaction',
@@ -80,6 +81,7 @@ __all__ = [
     'GeoCoordinates',
     'MediaEventValue',
     'Place',
+    'ErrorCode',
     'ActivityType',
     'TextFormat',
     'InputHint',

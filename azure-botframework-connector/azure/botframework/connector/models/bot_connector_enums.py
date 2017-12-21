@@ -12,6 +12,18 @@
 from enum import Enum
 
 
+class ErrorCode(Enum):
+
+    four_zero_zero = "400"
+    four_zero_one = "401"
+    four_zero_three = "403"
+    four_zero_four = "404"
+    four_zero_five = "405"
+    four_two_nine = "429"
+    five_zero_zero = "500"
+    five_zero_three = "503"
+
+
 class ActivityType(Enum):
 
     message = "message"

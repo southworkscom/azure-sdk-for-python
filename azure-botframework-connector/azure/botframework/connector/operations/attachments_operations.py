@@ -10,7 +10,6 @@
 # --------------------------------------------------------------------------
 
 from msrest.pipeline import ClientRawResponse
-from msrest.exceptions import HttpOperationError
 
 from .. import models
 
@@ -48,10 +47,11 @@ class AttachmentsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: AttachmentInfo or ClientRawResponse if raw=true
+        :rtype: ~azure.botframework.connector.models.AttachmentInfo or
+         ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/attachments/{attachmentId}'
@@ -73,27 +73,13 @@ class AttachmentsOperations(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, **operation_config)
 
-        if response.status_code not in [200, 400, 401, 403, 404, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
         if response.status_code == 200:
             deserialized = self._deserialize('AttachmentInfo', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
@@ -116,10 +102,10 @@ class AttachmentsOperations(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: bytearray or ClientRawResponse if raw=true
+        :rtype: bytearray or ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
         """
         # Construct URL
         url = '/v3/attachments/{attachmentId}/views/{viewId}'
@@ -142,27 +128,13 @@ class AttachmentsOperations(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, **operation_config)
 
-        if response.status_code not in [200, 301, 302, 400, 401, 403, 404, 429, 500, 503]:
-            raise HttpOperationError(self._deserialize, response)
+        if response.status_code not in [200, 301, 302]:
+            raise models.ErrorResponseException(self._deserialize, response)
 
         deserialized = None
 
         if response.status_code == 200:
             deserialized = self._deserialize('bytearray', response)
-        if response.status_code == 400:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 401:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 403:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 404:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 429:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 500:
-            deserialized = self._deserialize('ErrorResponse', response)
-        if response.status_code == 503:
-            deserialized = self._deserialize('ErrorResponse', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
