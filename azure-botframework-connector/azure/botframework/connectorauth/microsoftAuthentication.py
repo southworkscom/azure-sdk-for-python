@@ -20,8 +20,8 @@ AuthSettings = {
 
 class MicrosoftTokenAuthentication(Authentication):
     def __init__(self, appId, password):
-        self.microsoftAppId = appId;
-        self.microsoftAppPassword = password;
+        self.microsoftAppId = appId
+        self.microsoftAppPassword = password
         self.scheme = 'Bearer'
         self.token = ""
         self.accessTokenExpiration = datetime.min
