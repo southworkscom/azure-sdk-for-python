@@ -34,6 +34,10 @@
       "build_dir": "azure-mgmt-billing",
       "markdown": "specification/billing/resource-manager/readme.md"
     },
+    "botframework.connector": {
+      "build_dir": "azure-botframework-connector",
+      "markdown": "specification/botframework/data-plane/connector/readme.md",
+    },
     "cdn": {
       "build_dir": "azure-mgmt-cdn",
       "markdown": "specification/cdn/resource-manager/readme.md"
