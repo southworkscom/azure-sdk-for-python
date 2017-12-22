@@ -1,0 +1,31 @@
+interactions:
+- request:
+    body: '{"activity": {"text": "Hi there!", "recipient": {"id": "946773412111690"},
+      "channelId": "facebook", "type": "message"}, "bot": {"id": "726774820806739"},
+      "members": [{"id": "946773412111690"}]}'
+    headers:
+      Accept: [application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['193']
+      Content-Type: [application/json; charset=utf-8]
+      User-Agent: [python/3.5.3 (Linux-4.11.0-041100-generic-x86_64-with-Ubuntu-17.04-zesty)
+          requests/2.18.1 msrest/0.4.23 azure-botframework-connector/v3.0]
+    method: POST
+    uri: https://facebook.botframework.com/v3/conversations
+  response:
+    body: {string: "{\r\n  \"id\": \"946773412111690-PcBotBuilderSample\"\r\n}"}
+    headers:
+      cache-control: [no-cache]
+      content-length: ['50']
+      content-type: [application/json; charset=utf-8]
+      date: ['Fri, 22 Dec 2017 18:57:34 GMT']
+      expires: ['-1']
+      pragma: [no-cache]
+      request-context: ['appId=cid-v1:4ca03842-d082-4e2e-b3b4-609aa044a18f']
+      server: [Microsoft-IIS/10.0]
+      strict-transport-security: [max-age=31536000]
+      vary: [Accept-Encoding]
+      x-powered-by: [ASP.NET]
+    status: {code: 200, message: OK}
+version: 1
