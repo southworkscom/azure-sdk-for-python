@@ -8,11 +8,8 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 # --------------------------------------------------------------------------
-from os.path import dirname, join, realpath
-
 import pytest
-from azure_devtools.scenario_tests import ReplayableTest, AzureTestError
-from devtools_testutils import mgmt_settings_fake as fake_settings
+from azure_devtools.scenario_tests import ReplayableTest
 
 from azure.botframework.connector import BotConnector
 from azure.botframework.connectorauth import MicrosoftTokenAuthentication
@@ -38,8 +35,7 @@ class ConversationTest(ReplayableTest):
             # MICROSOFT_APP_ID = '...'
             # MICROSOFT_APP_PASSWORD = '...'
             return MicrosoftTokenAuthentication(app_creds_real.MICROSOFT_APP_ID, app_creds_real.MICROSOFT_APP_PASSWORD)
-        else:
-            return MicrosoftTokenAuthenticationStub('STUB_ACCESS_TOKEN')
+        return MicrosoftTokenAuthenticationStub('STUB_ACCESS_TOKEN')
 
     def test_conversations_create_conversation(self):
         connector = BotConnector(self.credentials, base_url=SERVICE_URL)
@@ -82,18 +78,14 @@ class ConversationTest(ReplayableTest):
             title='A static image',
             text='JPEG image',
             images=[
-                models.CardImage(
-                    url=
-                    'https://docs.microsoft.com/en-us/bot-framework/media/designing-bots/core/dialogs-screens.png'
-                )
+                models.CardImage(url='https://docs.microsoft.com/en-us/bot-framework/media/designing-bots/core/dialogs-screens.png')
             ])
 
         card2 = models.HeroCard(
             title='An animation',
             subtitle='GIF image',
             images=[
-                models.CardImage(
-                    url='http://i.giphy.com/Ki55RUbOV5njy.gif')
+                models.CardImage(url='http://i.giphy.com/Ki55RUbOV5njy.gif')
             ])
 
         activity = models.Activity(
@@ -118,8 +110,7 @@ class ConversationTest(ReplayableTest):
 
     def test_conversations_send_to_conversation_with_invalid_conversation_id_fails(self):
 
-        with pytest.raises(
-                models.error_response.ErrorResponseException) as excinfo:
+        with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
 
             activity = models.Activity(
@@ -143,4 +134,3 @@ class ConversationTest(ReplayableTest):
         assert len(members) == 2
         assert members[0].name == BOT_NAME
         assert members[0].id == BOT_ID
-
