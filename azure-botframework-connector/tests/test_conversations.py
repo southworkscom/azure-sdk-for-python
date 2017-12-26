@@ -17,11 +17,24 @@ from azure.botframework.connector import models
 
 from authentication_stub import MicrosoftTokenAuthenticationStub
 
-SERVICE_URL = 'https://facebook.botframework.com'
-BOT_NAME = 'PcBotBuilderSample'
-BOT_ID = '726774820806739'
-RECIPIENT_ID = '946773412111690'
-CONVERSATION_ID = '946773412111690-PcBotBuilderSample'
+SERVICE_URL = 'https://slack.botframework.com'
+CHANNEL_ID = 'slack'
+BOT_NAME = 'botbuilder-pc-bot'
+BOT_ID = 'B21UTEF8S:T03CWQ0QB'
+RECIPIENT_ID = 'U19KH8EHJ:T03CWQ0QB'
+CONVERSATION_ID = 'B21UTEF8S:T03CWQ0QB:D2369CT7C'
+
+def get_auth_token():
+    try:
+        import app_creds_real
+        # Define a "app_creds_real.py" file with your bot credentials as follows:
+        # MICROSOFT_APP_ID = '...'
+        # MICROSOFT_APP_PASSWORD = '...'
+        return MicrosoftTokenAuthentication(app_creds_real.MICROSOFT_APP_ID, app_creds_real.MICROSOFT_APP_PASSWORD).get_accessToken()
+    except ImportError:
+        return 'STUB_ACCESS_TOKEN'
+
+auth_token = get_auth_token()
 
 class ConversationTest(ReplayableTest):
     def __init__(self, method_name):
@@ -29,13 +42,7 @@ class ConversationTest(ReplayableTest):
 
     @property
     def credentials(self):
-        if self.is_live:
-            import app_creds_real
-            # Define a "app_creds_real.py" file with your bot credentials as follows:
-            # MICROSOFT_APP_ID = '...'
-            # MICROSOFT_APP_PASSWORD = '...'
-            return MicrosoftTokenAuthentication(app_creds_real.MICROSOFT_APP_ID, app_creds_real.MICROSOFT_APP_PASSWORD)
-        return MicrosoftTokenAuthenticationStub('STUB_ACCESS_TOKEN')
+        return MicrosoftTokenAuthenticationStub(auth_token)
 
     def test_conversations_create_conversation(self):
         connector = BotConnector(self.credentials, base_url=SERVICE_URL)
@@ -47,7 +54,7 @@ class ConversationTest(ReplayableTest):
         create_conversation.members = [recipient]
         create_conversation.activity = models.Activity(
             type=models.ActivityType.message,
-            channel_id='facebook',
+            channel_id=CHANNEL_ID,
             recipient=recipient,
             text='Hi there!')
 
@@ -61,7 +68,7 @@ class ConversationTest(ReplayableTest):
 
         activity = models.Activity(
             type=models.ActivityType.message,
-            channel_id='facebook',
+            channel_id=CHANNEL_ID,
             recipient=models.ChannelAccount(id=RECIPIENT_ID),
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Hello again!')
@@ -90,7 +97,7 @@ class ConversationTest(ReplayableTest):
 
         activity = models.Activity(
             type=models.ActivityType.message,
-            channel_id='facebook',
+            channel_id=CHANNEL_ID,
             recipient=models.ChannelAccount(id=RECIPIENT_ID),
             from_property=models.ChannelAccount(id=BOT_ID),
             # attachment_layout='carousel',
@@ -115,7 +122,7 @@ class ConversationTest(ReplayableTest):
 
             activity = models.Activity(
                 type=models.ActivityType.message,
-                channel_id='facebook',
+                channel_id=CHANNEL_ID,
                 recipient=models.ChannelAccount(id=RECIPIENT_ID),
                 from_property=models.ChannelAccount(id=BOT_ID),
                 text='Error!')
@@ -123,8 +130,7 @@ class ConversationTest(ReplayableTest):
             connector.conversations.send_to_conversation('123', activity)
 
         assert excinfo.value.error.error.code == 'ServiceError'
-        assert 'cannot send messages to this id' in str(
-            excinfo.value.error.error.message)
+        assert 'cannot send messages to this id' in str(excinfo.value.error.error.message) or 'Invalid ConversationId' in str(excinfo.value.error.error.message)
 
     def test_conversations_get_conversation_members(self):
         connector = BotConnector(self.credentials, base_url=SERVICE_URL)
