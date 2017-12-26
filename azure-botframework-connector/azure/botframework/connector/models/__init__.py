@@ -47,6 +47,7 @@ from .bot_connector_enums import (
     TextFormat,
     AttachmentLayout,
     InputHint,
+    CardContentType,
 )
 
 __all__ = [
@@ -87,4 +88,5 @@ __all__ = [
     'TextFormat',
     'AttachmentLayout',
     'InputHint',
+    'CardContentType',
 ]

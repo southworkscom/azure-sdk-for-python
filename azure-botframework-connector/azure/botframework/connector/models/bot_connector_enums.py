@@ -53,3 +53,16 @@ class InputHint(Enum):
     accepting_input = "acceptingInput"
     expecting_input = "expectingInput"
     ignoring_input = "ignoringInput"
+
+
+class CardContentType(Enum):
+
+    keyboard = "application/vnd.microsoft.card.keyboard"
+    thumbnail = "application/vnd.microsoft.card.thumbnail"
+    hero = "application/vnd.microsoft.card.hero"
+    receipt = "application/vnd.microsoft.card.receipt"
+    sign_in = "application/vnd.microsoft.card.signin"
+    animation = "application/vnd.microsoft.card.animation"
+    audio = "application/vnd.microsoft.card.audio"
+    video = "application/vnd.microsoft.card.video"
+    payment = "application/vnd.microsoft.card.payment"

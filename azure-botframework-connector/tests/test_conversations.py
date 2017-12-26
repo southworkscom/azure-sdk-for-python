@@ -103,10 +103,10 @@ class ConversationTest(ReplayableTest):
             attachment_layout=models.AttachmentLayout.list,
             attachments=[
                 models.Attachment(
-                    content_type='application/vnd.microsoft.card.hero',
+                    content_type=models.CardContentType.hero,
                     content=card1),
                 models.Attachment(
-                    content_type='application/vnd.microsoft.card.hero',
+                    content_type=models.CardContentType.hero,
                     content=card2),
             ])
 
