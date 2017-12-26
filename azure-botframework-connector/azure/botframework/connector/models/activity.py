@@ -45,8 +45,9 @@ class Activity(Model):
      values include: 'markdown', 'plain', 'xml'
     :type text_format: str or ~azure.botframework.connector.models.TextFormat
     :param attachment_layout: Hint for how to deal with multiple attachments:
-     [list|carousel] Default: list.
-    :type attachment_layout: str
+     [list|carousel] Default: list. Possible values include: 'list', 'carousel'
+    :type attachment_layout: str or
+     ~azure.botframework.connector.models.AttachmentLayout
     :param members_added: Members added to the conversation. Present only if
      activity type is "conversationUpdate" and users joined the conversation.
     :type members_added:

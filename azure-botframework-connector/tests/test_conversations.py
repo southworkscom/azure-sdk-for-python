@@ -100,7 +100,7 @@ class ConversationTest(ReplayableTest):
             channel_id=CHANNEL_ID,
             recipient=models.ChannelAccount(id=RECIPIENT_ID),
             from_property=models.ChannelAccount(id=BOT_ID),
-            # attachment_layout='carousel',
+            attachment_layout=models.AttachmentLayout.list,
             attachments=[
                 models.Attachment(
                     content_type='application/vnd.microsoft.card.hero',

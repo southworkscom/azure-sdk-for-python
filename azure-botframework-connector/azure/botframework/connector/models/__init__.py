@@ -45,6 +45,7 @@ from .bot_connector_enums import (
     ErrorCode,
     ActivityType,
     TextFormat,
+    AttachmentLayout,
     InputHint,
 )
 
@@ -84,5 +85,6 @@ __all__ = [
     'ErrorCode',
     'ActivityType',
     'TextFormat',
+    'AttachmentLayout',
     'InputHint',
 ]

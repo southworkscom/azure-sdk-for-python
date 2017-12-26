@@ -42,6 +42,12 @@ class TextFormat(Enum):
     xml = "xml"
 
 
+class AttachmentLayout(Enum):
+
+    list = "list"
+    carousel = "carousel"
+
+
 class InputHint(Enum):
 
     accepting_input = "acceptingInput"
