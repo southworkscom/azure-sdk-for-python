@@ -140,3 +140,91 @@ class ConversationTest(ReplayableTest):
         assert len(members) == 2
         assert members[0].name == BOT_NAME
         assert members[0].id == BOT_ID
+
+    def test_conversations_update_activity(self):
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
+
+        activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Updating activity...')
+
+        response = connector.conversations.send_to_conversation(
+            CONVERSATION_ID, activity)
+        activity_id = response.id
+
+        activity_update = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Activity updated.')
+
+        response = connector.conversations.update_activity(CONVERSATION_ID, activity_id, activity_update)
+
+        assert response is not None
+        assert response.id == activity_id
+
+    def test_conversations_reply_to_activity(self):
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
+
+        activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Thread activity')
+
+        response = connector.conversations.send_to_conversation(
+            CONVERSATION_ID, activity)
+        activity_id = response.id
+
+        child_activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Child activity.')
+
+        response = connector.conversations.reply_to_activity(CONVERSATION_ID, activity_id, child_activity)
+
+        assert response is not None
+        assert response.id != activity_id
+
+    def test_conversations_delete_activity(self):
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
+
+        activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Activity to be deleted..')
+
+        response = connector.conversations.send_to_conversation(
+            CONVERSATION_ID, activity)
+        activity_id = response.id
+
+        response = connector.conversations.delete_activity(CONVERSATION_ID, activity_id)
+
+        assert response is None
+
+    def test_conversations_get_activity_members(self):
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
+
+        activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Test Activity')
+
+        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
+
+        members = connector.conversations.get_activity_members(CONVERSATION_ID, response.id)
+
+        assert len(members) == 2
+        assert members[0].name == BOT_NAME
+        assert members[0].id == BOT_ID
