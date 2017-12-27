@@ -35,17 +35,18 @@ class Activity(Model):
     :type channel_id: str
     :param from_property: Sender address.
     :type from_property: ~azure.botframework.connector.models.ChannelAccount
-    :param conversation: Conversation.
+    :param conversation: Channel account information.
     :type conversation:
      ~azure.botframework.connector.models.ConversationAccount
     :param recipient: (Outbound to bot only) Bot's address that received the
      message.
     :type recipient: ~azure.botframework.connector.models.ChannelAccount
     :param text_format: Format of text fields. Default: markdown. Possible
-     values include: 'markdown', 'plain', 'xml'
+     values include: 'markdown', 'plain', 'xml'. Default value: "markdown" .
     :type text_format: str or ~azure.botframework.connector.models.TextFormat
     :param attachment_layout: Hint for how to deal with multiple attachments:
-     [list|carousel] Default: list. Possible values include: 'list', 'carousel'
+     [list|carousel] Default: list. Possible values include: 'list',
+     'carousel'. Default value: "list" .
     :type attachment_layout: str or
      ~azure.botframework.connector.models.AttachmentLayout
     :param members_added: Members added to the conversation. Present only if
@@ -86,7 +87,7 @@ class Activity(Model):
      keyboard/quick-reply like behavior in many clients.
     :type suggested_actions:
      ~azure.botframework.connector.models.SuggestedActions
-    :param attachments: Attachments.
+    :param attachments: List of Attachments.
     :type attachments: list[~azure.botframework.connector.models.Attachment]
     :param entities: Collection of Entity objects, each of which contains
      metadata about this activity. Each Entity object is typed.
@@ -112,6 +113,11 @@ class Activity(Model):
     :type code: str
     """
 
+    _validation = {
+        'type': {'required': True},
+        'recipient': {'required': True},
+    }
+
     _attribute_map = {
         'type': {'key': 'type', 'type': 'ActivityType'},
         'id': {'key': 'id', 'type': 'str'},
@@ -123,7 +129,7 @@ class Activity(Model):
         'conversation': {'key': 'conversation', 'type': 'ConversationAccount'},
         'recipient': {'key': 'recipient', 'type': 'ChannelAccount'},
         'text_format': {'key': 'textFormat', 'type': 'TextFormat'},
-        'attachment_layout': {'key': 'attachmentLayout', 'type': 'str'},
+        'attachment_layout': {'key': 'attachmentLayout', 'type': 'AttachmentLayout'},
         'members_added': {'key': 'membersAdded', 'type': '[ChannelAccount]'},
         'members_removed': {'key': 'membersRemoved', 'type': '[ChannelAccount]'},
         'reactions_added': {'key': 'reactionsAdded', 'type': '[MessageReaction]'},
@@ -147,7 +153,7 @@ class Activity(Model):
         'code': {'key': 'code', 'type': 'str'},
     }
 
-    def __init__(self, type=None, id=None, timestamp=None, local_timestamp=None, service_url=None, channel_id=None, from_property=None, conversation=None, recipient=None, text_format=None, attachment_layout=None, members_added=None, members_removed=None, reactions_added=None, reactions_removed=None, topic_name=None, history_disclosed=None, locale=None, text=None, speak=None, input_hint=None, summary=None, suggested_actions=None, attachments=None, entities=None, channel_data=None, action=None, reply_to_id=None, value=None, name=None, relates_to=None, code=None):
+    def __init__(self, type, recipient, id=None, timestamp=None, local_timestamp=None, service_url=None, channel_id=None, from_property=None, conversation=None, text_format="markdown", attachment_layout="list", members_added=None, members_removed=None, reactions_added=None, reactions_removed=None, topic_name=None, history_disclosed=None, locale=None, text=None, speak=None, input_hint=None, summary=None, suggested_actions=None, attachments=None, entities=None, channel_data=None, action=None, reply_to_id=None, value=None, name=None, relates_to=None, code=None):
         super(Activity, self).__init__()
         self.type = type
         self.id = id

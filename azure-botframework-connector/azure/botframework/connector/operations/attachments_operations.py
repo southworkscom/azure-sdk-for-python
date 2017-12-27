@@ -10,6 +10,7 @@
 # --------------------------------------------------------------------------
 
 from msrest.pipeline import ClientRawResponse
+from msrest.exceptions import HttpOperationError
 
 from .. import models
 
@@ -105,7 +106,7 @@ class AttachmentsOperations(object):
         :return: bytearray or ClientRawResponse if raw=true
         :rtype: bytearray or ~msrest.pipeline.ClientRawResponse
         :raises:
-         :class:`ErrorResponseException<azure.botframework.connector.models.ErrorResponseException>`
+         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
         url = '/v3/attachments/{attachmentId}/views/{viewId}'
@@ -129,7 +130,7 @@ class AttachmentsOperations(object):
         response = self._client.send(request, header_parameters, **operation_config)
 
         if response.status_code not in [200, 301, 302]:
-            raise models.ErrorResponseException(self._deserialize, response)
+            raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
 
