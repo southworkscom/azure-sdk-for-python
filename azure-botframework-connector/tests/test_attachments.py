@@ -57,17 +57,15 @@ class AttachmentsTest(ReplayableTest):
         return MicrosoftTokenAuthenticationStub(auth_token)
 
     def test_attachments_upload_and_get_attachment(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         attachment = models.AttachmentData(
             type='image/png',
             name='Bot.png',
             original_base64=read_base64('bot.png'),
             thumbnail_base64=read_base64('bot_icon.png'))
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
         response = connector.conversations.upload_attachment(CONVERSATION_ID, attachment)
         attachment_id = response.id
-
         attachment_info = connector.attachments.get_attachment_info(attachment_id)
 
         assert attachment_info is not None
@@ -77,52 +75,40 @@ class AttachmentsTest(ReplayableTest):
 
     def test_attachments_upload_without_original_fails(self):
         with pytest.raises(TypeError) as excinfo:
-            connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
             attachment = models.AttachmentData(
                 type='image/png',
                 name='Bot.png',
                 thumbnail_base64=read_base64('bot_icon.png'))
-
-            connector.conversations.upload_attachment(CONVERSATION_ID, attachment)
 
         assert ('required' in str(excinfo.value) and 'original_base64' in str(excinfo.value))
 
 
     def test_attachments_upload_without_contenttype_fails(self):
         with pytest.raises(TypeError) as excinfo:
-            connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
             attachment = models.AttachmentData(
                 name='Bot.png',
                 original_base64=read_base64('bot.png'))
-
-            connector.conversations.upload_attachment(CONVERSATION_ID, attachment)
 
         assert ('required' in str(excinfo.value) and 'type' in str(excinfo.value))
 
     def test_attachments_get_info_invalid_attachment_id_fails(self):
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
             connector.attachments.get_attachment_info('bt13796-GJS4yaxDLI')
 
         assert ('Not Found' in str(excinfo.value))
 
     def test_attachments_get_attachment_view(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         original = read_base64('bot.png')
-
         attachment = models.AttachmentData(
             type='image/png',
             name='Bot.png',
             original_base64=original,
             thumbnail_base64=read_base64('bot_icon.png'))
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
         response = connector.conversations.upload_attachment(CONVERSATION_ID, attachment)
         attachment_id = response.id
-
         attachment_view = connector.attachments.get_attachment(attachment_id, 'original')
 
         assert len(base64.b64decode(original)) == len(attachment_view)
@@ -130,25 +116,22 @@ class AttachmentsTest(ReplayableTest):
     def test_attachments_get_attachment_view_with_invalid_attachment_id_fails(self):
         with pytest.raises(msrest.exceptions.HttpOperationError) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
             connector.attachments.get_attachment('bt13796-GJS4yaxDLI', 'original')
 
         assert ('Not Found' in str(excinfo.value))
 
     def test_attachments_get_attachment_view_with_invalid_view_id_fails(self):
+        original = read_base64('bot.png')
+        attachment = models.AttachmentData(
+            type='image/png',
+            name='Bot.png',
+            original_base64=original,
+            thumbnail_base64=read_base64('bot_icon.png'))
+
         with pytest.raises(msrest.exceptions.HttpOperationError) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            original = read_base64('bot.png')
-
-            attachment = models.AttachmentData(
-                type='image/png',
-                name='Bot.png',
-                original_base64=original,
-                thumbnail_base64=read_base64('bot_icon.png'))
-
             response = connector.conversations.upload_attachment(CONVERSATION_ID, attachment)
             attachment_id = response.id
-
             attachment_view = connector.attachments.get_attachment(attachment_id, 'invalid')
+
         assert ('Not Found' in str(excinfo.value))

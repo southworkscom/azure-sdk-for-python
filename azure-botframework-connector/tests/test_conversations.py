@@ -50,39 +50,36 @@ class ConversationTest(ReplayableTest):
         return MicrosoftTokenAuthenticationStub(auth_token)
 
     def test_conversations_create_conversation(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         to = models.ChannelAccount(id=RECIPIENT_ID)
         create_conversation = models.ConversationParameters(
             bot=models.ChannelAccount(id=BOT_ID),
-            members=[to])
-        create_conversation.activity = models.Activity(
-            type=models.ActivityType.message,
-            channel_id=CHANNEL_ID,
-            from_property=models.ChannelAccount(id=BOT_ID),
-            recipient=to,
-            text='Hi there!')
+            members=[to],
+            activity = models.Activity(
+                type=models.ActivityType.message,
+                channel_id=CHANNEL_ID,
+                from_property=models.ChannelAccount(id=BOT_ID),
+                recipient=to,
+                text='Hi there!'))
 
-        conversation = connector.conversations.create_conversation(
-            create_conversation)
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
+        conversation = connector.conversations.create_conversation(create_conversation)
 
         assert conversation.id is not None
 
     def test_conversations_create_conversation_with_invalid_bot_id_fails(self):
-        with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
-            connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            to = models.ChannelAccount(id=RECIPIENT_ID)
-            create_conversation = models.ConversationParameters(
-                bot=models.ChannelAccount(id='INVALID'),
-                members=[to])
-            create_conversation.activity = models.Activity(
+        to = models.ChannelAccount(id=RECIPIENT_ID)
+        create_conversation = models.ConversationParameters(
+            bot=models.ChannelAccount(id='INVALID'),
+            members=[to],
+            activity = models.Activity(
                 type=models.ActivityType.message,
                 channel_id=CHANNEL_ID,
                 from_property=models.ChannelAccount(id='INVALID'),
                 recipient=to,
-                text='Hi there!')
+                text='Hi there!'))
 
+        with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
+            connector = BotConnector(self.credentials, base_url=SERVICE_URL)
             connector.conversations.create_conversation(create_conversation)
 
         assert excinfo.value.error.error.code == 'ServiceError'
@@ -90,45 +87,37 @@ class ConversationTest(ReplayableTest):
 
     def test_conversations_create_conversation_without_members_fails(self):
         with pytest.raises(TypeError) as excinfo:
-            connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            to = models.ChannelAccount(id=RECIPIENT_ID)
             create_conversation = models.ConversationParameters(
-                bot=models.ChannelAccount(id=BOT_ID))
-            create_conversation.activity = models.Activity(
-                type=models.ActivityType.message,
-                channel_id=CHANNEL_ID,
-                from_property=models.ChannelAccount(id=BOT_ID),
-                text='Hi there!')
+                bot=models.ChannelAccount(id=BOT_ID),
+                activity=models.Activity(
+                    type=models.ActivityType.message,
+                    channel_id=CHANNEL_ID,
+                    from_property=models.ChannelAccount(id=BOT_ID),
+                    text='Hi there!'))
 
-            connector.conversations.create_conversation(create_conversation)
-
-        assert ('required' in str(excinfo.value) and 'members' in str(excinfo.value))
+        assert ('required' in str(excinfo.value) and 'recipient' in str(excinfo.value))
 
     def test_conversations_create_conversation_with_bot_as_only_member_fails(self):
-        with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
-            connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            to = models.ChannelAccount(id=BOT_ID)
-            sender = models.ChannelAccount(id=BOT_ID)
-            create_conversation = models.ConversationParameters(
-                bot=sender,
-                members=[to])
-            create_conversation.activity = models.Activity(
+        to = models.ChannelAccount(id=BOT_ID)
+        sender = models.ChannelAccount(id=BOT_ID)
+        create_conversation = models.ConversationParameters(
+            bot=sender,
+            members=[to],
+            activity = models.Activity(
                 type=models.ActivityType.message,
                 channel_id=CHANNEL_ID,
                 from_property=sender,
                 recipient=to,
-                text='Hi there!')
+                text='Hi there!'))
 
+        with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
+            connector = BotConnector(self.credentials, base_url=SERVICE_URL)
             connector.conversations.create_conversation(create_conversation)
 
         assert excinfo.value.error.error.code == 'BadArgument'
         assert ('Bots cannot IM other bots' in str(excinfo.value.error.error.message))
 
     def test_conversations_send_to_conversation(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         activity = models.Activity(
             type=models.ActivityType.message,
             channel_id=CHANNEL_ID,
@@ -136,14 +125,13 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Hello again!')
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
         response = connector.conversations.send_to_conversation(
             CONVERSATION_ID, activity)
 
         assert response is not None
 
     def test_conversations_send_to_conversation_with_attachment(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         card1 = models.HeroCard(
             title='A static image',
             text='JPEG image',
@@ -169,22 +157,21 @@ class ConversationTest(ReplayableTest):
                 models.Attachment(content_type=models.CardContentType.hero, content=card2),
             ])
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
         response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
 
         assert response is not None
 
     def test_conversations_send_to_conversation_with_invalid_conversation_id_fails(self):
+        activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Error!')
 
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            activity = models.Activity(
-                type=models.ActivityType.message,
-                channel_id=CHANNEL_ID,
-                recipient=models.ChannelAccount(id=RECIPIENT_ID),
-                from_property=models.ChannelAccount(id=BOT_ID),
-                text='Error!')
-
             connector.conversations.send_to_conversation('123', activity)
 
         assert excinfo.value.error.error.code == 'ServiceError'
@@ -193,7 +180,6 @@ class ConversationTest(ReplayableTest):
 
     def test_conversations_get_conversation_members(self):
         connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         members = connector.conversations.get_conversation_members(CONVERSATION_ID)
 
         assert len(members) == 2
@@ -202,9 +188,7 @@ class ConversationTest(ReplayableTest):
 
     def test_conversations_get_conversation_members_invalid_id_fails(self):
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
-
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
             members = connector.conversations.get_conversation_members('INVALID_ID')
 
         assert excinfo.value.error.error.code == 'ServiceError'
@@ -212,17 +196,12 @@ class ConversationTest(ReplayableTest):
                 or 'Invalid ConversationId' in str(excinfo.value.error.error.message))
 
     def test_conversations_update_activity(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         activity = models.Activity(
             type=models.ActivityType.message,
             channel_id=CHANNEL_ID,
             recipient=models.ChannelAccount(id=RECIPIENT_ID),
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Updating activity...')
-
-        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
-        activity_id = response.id
 
         activity_update = models.Activity(
             type=models.ActivityType.message,
@@ -231,50 +210,45 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Activity updated.')
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
+        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
+        activity_id = response.id
         response = connector.conversations.update_activity(CONVERSATION_ID, activity_id, activity_update)
 
         assert response is not None
         assert response.id == activity_id
 
     def test_conversations_update_activity_invalid_conversation_id_fails(self):
+        activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Updating activity...')
+
+        activity_update = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Activity updated.')
+
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
-
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            activity = models.Activity(
-                type=models.ActivityType.message,
-                channel_id=CHANNEL_ID,
-                recipient=models.ChannelAccount(id=RECIPIENT_ID),
-                from_property=models.ChannelAccount(id=BOT_ID),
-                text='Updating activity...')
-
             response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
             activity_id = response.id
-
-            activity_update = models.Activity(
-                type=models.ActivityType.message,
-                channel_id=CHANNEL_ID,
-                recipient=models.ChannelAccount(id=RECIPIENT_ID),
-                from_property=models.ChannelAccount(id=BOT_ID),
-                text='Activity updated.')
-
             connector.conversations.update_activity('INVALID_ID', activity_id, activity_update)
 
         assert excinfo.value.error.error.code == 'ServiceError'
         assert ('Invalid ConversationId' in str(excinfo.value.error.error.message))
 
     def test_conversations_reply_to_activity(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         activity = models.Activity(
             type=models.ActivityType.message,
             channel_id=CHANNEL_ID,
             recipient=models.ChannelAccount(id=RECIPIENT_ID),
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Thread activity')
-
-        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
-        activity_id = response.id
 
         child_activity = models.Activity(
             type=models.ActivityType.message,
@@ -283,30 +257,30 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Child activity.')
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
+        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
+        activity_id = response.id
         response = connector.conversations.reply_to_activity(CONVERSATION_ID, activity_id, child_activity)
 
         assert response is not None
         assert response.id != activity_id
 
     def test_conversations_reply_to_activity_with_invalid_conversation_id_fails(self):
+        child_activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Child activity.')
+
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            child_activity = models.Activity(
-                type=models.ActivityType.message,
-                channel_id=CHANNEL_ID,
-                recipient=models.ChannelAccount(id=RECIPIENT_ID),
-                from_property=models.ChannelAccount(id=BOT_ID),
-                text='Child activity.')
-
             connector.conversations.reply_to_activity('INVALID_ID', 'INVALID_ID', child_activity)
 
         assert excinfo.value.error.error.code == 'ServiceError'
         assert ('Invalid ConversationId' in str(excinfo.value.error.error.message))
 
     def test_conversations_delete_activity(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         activity = models.Activity(
             type=models.ActivityType.message,
             channel_id=CHANNEL_ID,
@@ -314,9 +288,9 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Activity to be deleted..')
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
         response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
         activity_id = response.id
-
         response = connector.conversations.delete_activity(CONVERSATION_ID, activity_id)
 
         assert response is None
@@ -324,15 +298,12 @@ class ConversationTest(ReplayableTest):
     def test_conversations_delete_activity_with_invalid_conversation_id_fails(self):
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
             connector.conversations.delete_activity('INVALID_ID', 'INVALID_ID')
 
         assert excinfo.value.error.error.code == 'ServiceError'
         assert ('Invalid ConversationId' in str(excinfo.value.error.error.message))
 
     def test_conversations_get_activity_members(self):
-        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
         activity = models.Activity(
             type=models.ActivityType.message,
             channel_id=CHANNEL_ID,
@@ -340,8 +311,8 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Test Activity')
 
+        connector = BotConnector(self.credentials, base_url=SERVICE_URL)
         response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
-
         members = connector.conversations.get_activity_members(CONVERSATION_ID, response.id)
 
         assert len(members) == 2
@@ -349,18 +320,16 @@ class ConversationTest(ReplayableTest):
         assert members[0].id == BOT_ID
 
     def test_conversations_get_activity_members_invalid_conversation_id_fails(self):
+        activity = models.Activity(
+            type=models.ActivityType.message,
+            channel_id=CHANNEL_ID,
+            recipient=models.ChannelAccount(id=RECIPIENT_ID),
+            from_property=models.ChannelAccount(id=BOT_ID),
+            text='Test Activity')
+
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
-
-            activity = models.Activity(
-                type=models.ActivityType.message,
-                channel_id=CHANNEL_ID,
-                recipient=models.ChannelAccount(id=RECIPIENT_ID),
-                from_property=models.ChannelAccount(id=BOT_ID),
-                text='Test Activity')
-
             response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
-
             connector.conversations.get_activity_members('INVALID_ID', response.id)
 
         assert excinfo.value.error.error.code == 'ServiceError'
