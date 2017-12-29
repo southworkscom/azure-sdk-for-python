@@ -25,6 +25,11 @@ class AttachmentData(Model):
     :type thumbnail_base64: bytearray
     """
 
+    _validation = {
+        'type': {'required': True},
+        'original_base64': {'required': True},
+    }
+
     _attribute_map = {
         'type': {'key': 'type', 'type': 'str'},
         'name': {'key': 'name', 'type': 'str'},
@@ -32,7 +37,7 @@ class AttachmentData(Model):
         'thumbnail_base64': {'key': 'thumbnailBase64', 'type': 'bytearray'},
     }
 
-    def __init__(self, type=None, name=None, original_base64=None, thumbnail_base64=None):
+    def __init__(self, type, original_base64, name=None, thumbnail_base64=None):
         super(AttachmentData, self).__init__()
         self.type = type
         self.name = name

@@ -32,6 +32,11 @@ class ConversationParameters(Model):
     :type channel_data: object
     """
 
+    _validation = {
+        'bot': {'required': True},
+        'members': {'required': True},
+    }
+
     _attribute_map = {
         'is_group': {'key': 'isGroup', 'type': 'bool'},
         'bot': {'key': 'bot', 'type': 'ChannelAccount'},
@@ -41,7 +46,7 @@ class ConversationParameters(Model):
         'channel_data': {'key': 'channelData', 'type': 'object'},
     }
 
-    def __init__(self, is_group=None, bot=None, members=None, topic_name=None, activity=None, channel_data=None):
+    def __init__(self, bot, members, is_group=None, topic_name=None, activity=None, channel_data=None):
         super(ConversationParameters, self).__init__()
         self.is_group = is_group
         self.bot = bot

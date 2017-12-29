@@ -24,17 +24,22 @@ BOT_ID = 'B21UTEF8S:T03CWQ0QB'
 RECIPIENT_ID = 'U19KH8EHJ:T03CWQ0QB'
 CONVERSATION_ID = 'B21UTEF8S:T03CWQ0QB:D2369CT7C'
 
+
 def get_auth_token():
     try:
         import app_creds_real
         # Define a "app_creds_real.py" file with your bot credentials as follows:
         # MICROSOFT_APP_ID = '...'
         # MICROSOFT_APP_PASSWORD = '...'
-        return MicrosoftTokenAuthentication(app_creds_real.MICROSOFT_APP_ID, app_creds_real.MICROSOFT_APP_PASSWORD).get_accessToken()
+        return MicrosoftTokenAuthentication(
+            app_creds_real.MICROSOFT_APP_ID,
+            app_creds_real.MICROSOFT_APP_PASSWORD).get_accessToken()
     except ImportError:
         return 'STUB_ACCESS_TOKEN'
 
+
 auth_token = get_auth_token()
+
 
 class ConversationTest(ReplayableTest):
     def __init__(self, method_name):
@@ -47,15 +52,15 @@ class ConversationTest(ReplayableTest):
     def test_conversations_create_conversation(self):
         connector = BotConnector(self.credentials, base_url=SERVICE_URL)
 
-        create_conversation = models.ConversationParameters()
-        bot = models.ChannelAccount(id=BOT_ID)
-        create_conversation.bot = bot
-        recipient = models.ChannelAccount(id=RECIPIENT_ID)
-        create_conversation.members = [recipient]
+        to = models.ChannelAccount(id=RECIPIENT_ID)
+        create_conversation = models.ConversationParameters(
+            bot=models.ChannelAccount(id=BOT_ID),
+            members=[to])
         create_conversation.activity = models.Activity(
             type=models.ActivityType.message,
             channel_id=CHANNEL_ID,
-            recipient=recipient,
+            from_property=models.ChannelAccount(id=BOT_ID),
+            recipient=to,
             text='Hi there!')
 
         conversation = connector.conversations.create_conversation(
@@ -102,20 +107,16 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             attachment_layout=models.AttachmentLayout.list,
             attachments=[
-                models.Attachment(
-                    content_type=models.CardContentType.hero,
-                    content=card1),
-                models.Attachment(
-                    content_type=models.CardContentType.hero,
-                    content=card2),
+                models.Attachment(content_type=models.CardContentType.hero, content=card1),
+                models.Attachment(content_type=models.CardContentType.hero, content=card2),
             ])
 
-        response = connector.conversations.send_to_conversation(
-            CONVERSATION_ID, activity)
+        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
 
         assert response is not None
 
-    def test_conversations_send_to_conversation_with_invalid_conversation_id_fails(self):
+    def test_conversations_send_to_conversation_with_invalid_conversation_id_fails(
+            self):
 
         with pytest.raises(models.error_response.ErrorResponseException) as excinfo:
             connector = BotConnector(self.credentials, base_url=SERVICE_URL)
@@ -130,7 +131,8 @@ class ConversationTest(ReplayableTest):
             connector.conversations.send_to_conversation('123', activity)
 
         assert excinfo.value.error.error.code == 'ServiceError'
-        assert 'cannot send messages to this id' in str(excinfo.value.error.error.message) or 'Invalid ConversationId' in str(excinfo.value.error.error.message)
+        assert ('cannot send messages to this id' in str(excinfo.value.error.error.message)
+                or 'Invalid ConversationId' in str(excinfo.value.error.error.message))
 
     def test_conversations_get_conversation_members(self):
         connector = BotConnector(self.credentials, base_url=SERVICE_URL)
@@ -151,8 +153,7 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Updating activity...')
 
-        response = connector.conversations.send_to_conversation(
-            CONVERSATION_ID, activity)
+        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
         activity_id = response.id
 
         activity_update = models.Activity(
@@ -177,8 +178,7 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Thread activity')
 
-        response = connector.conversations.send_to_conversation(
-            CONVERSATION_ID, activity)
+        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
         activity_id = response.id
 
         child_activity = models.Activity(
@@ -203,8 +203,7 @@ class ConversationTest(ReplayableTest):
             from_property=models.ChannelAccount(id=BOT_ID),
             text='Activity to be deleted..')
 
-        response = connector.conversations.send_to_conversation(
-            CONVERSATION_ID, activity)
+        response = connector.conversations.send_to_conversation(CONVERSATION_ID, activity)
         activity_id = response.id
 
         response = connector.conversations.delete_activity(CONVERSATION_ID, activity_id)

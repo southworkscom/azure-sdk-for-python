@@ -115,6 +115,7 @@ class Activity(Model):
 
     _validation = {
         'type': {'required': True},
+        'from_property': {'required': True},
         'recipient': {'required': True},
     }
 
@@ -153,7 +154,7 @@ class Activity(Model):
         'code': {'key': 'code', 'type': 'str'},
     }
 
-    def __init__(self, type, recipient, id=None, timestamp=None, local_timestamp=None, service_url=None, channel_id=None, from_property=None, conversation=None, text_format="markdown", attachment_layout="list", members_added=None, members_removed=None, reactions_added=None, reactions_removed=None, topic_name=None, history_disclosed=None, locale=None, text=None, speak=None, input_hint=None, summary=None, suggested_actions=None, attachments=None, entities=None, channel_data=None, action=None, reply_to_id=None, value=None, name=None, relates_to=None, code=None):
+    def __init__(self, type, from_property, recipient, id=None, timestamp=None, local_timestamp=None, service_url=None, channel_id=None, conversation=None, text_format="markdown", attachment_layout="list", members_added=None, members_removed=None, reactions_added=None, reactions_removed=None, topic_name=None, history_disclosed=None, locale=None, text=None, speak=None, input_hint=None, summary=None, suggested_actions=None, attachments=None, entities=None, channel_data=None, action=None, reply_to_id=None, value=None, name=None, relates_to=None, code=None):
         super(Activity, self).__init__()
         self.type = type
         self.id = id

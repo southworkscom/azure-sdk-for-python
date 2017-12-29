@@ -23,13 +23,18 @@ class AttachmentInfo(Model):
     :type views: list[~azure.botframework.connector.models.AttachmentView]
     """
 
+    _validation = {
+        'type': {'required': True},
+        'views': {'required': True},
+    }
+
     _attribute_map = {
         'name': {'key': 'name', 'type': 'str'},
         'type': {'key': 'type', 'type': 'str'},
         'views': {'key': 'views', 'type': '[AttachmentView]'},
     }
 
-    def __init__(self, name=None, type=None, views=None):
+    def __init__(self, type, views, name=None):
         super(AttachmentInfo, self).__init__()
         self.name = name
         self.type = type
