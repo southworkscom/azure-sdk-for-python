@@ -89,7 +89,7 @@ class AttachmentsOperations(object):
         return deserialized
 
     def get_attachment(
-            self, attachment_id, view_id, custom_headers=None, raw=False, **operation_config):
+            self, attachment_id, view_id, custom_headers=None, raw=False, callback=None, **operation_config):
         """GetAttachment.
 
         Gets the specified view of the specified attachment as binary content.
@@ -101,10 +101,15 @@ class AttachmentsOperations(object):
         :param dict custom_headers: headers that will be added to the request
         :param bool raw: returns the direct response alongside the
          deserialized response
+        :param callback: When specified, will be called with each chunk of
+         data that is streamed. The callback should take two arguments, the
+         bytes of the current chunk of data and the response object. If the
+         data is uploading, response will be None.
+        :type callback: Callable[Bytes, response=None]
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: bytearray or ClientRawResponse if raw=true
-        :rtype: bytearray or ~msrest.pipeline.ClientRawResponse
+        :return: object or ClientRawResponse if raw=true
+        :rtype: Generator or ~msrest.pipeline.ClientRawResponse
         :raises:
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
@@ -135,7 +140,7 @@ class AttachmentsOperations(object):
         deserialized = None
 
         if response.status_code == 200:
-            deserialized = self._deserialize('bytearray', response)
+            deserialized = self._client.stream_download(response, callback)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)

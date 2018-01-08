@@ -109,9 +109,9 @@ class AttachmentsTest(ReplayableTest):
         connector = BotConnector(self.credentials, base_url=SERVICE_URL)
         response = connector.conversations.upload_attachment(CONVERSATION_ID, attachment)
         attachment_id = response.id
-        attachment_view = connector.attachments.get_attachment(attachment_id, 'original')
+        attachment_stream = connector.attachments.get_attachment(attachment_id, 'original')
 
-        assert len(base64.b64decode(original)) == len(attachment_view)
+        assert len(original) == sum(len(_) for _ in attachment_stream)
 
     def test_attachments_get_attachment_view_with_invalid_attachment_id_fails(self):
         with pytest.raises(msrest.exceptions.HttpOperationError) as excinfo:
